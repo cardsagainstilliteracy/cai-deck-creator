@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Menu } = require("electron");
 const path = require("path");
 const isDev = require("electron-is-dev");
 // Keep a global reference of the window object, if you don't, the window will
@@ -14,8 +14,21 @@ function createWindow() {
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
-      : `file://${path.join(__dirname, "../build/index.html")}`
+      : `file://${path.join(__dirname, "../build/index.html")}`,
   );
+
+  if (isDev) {
+    const {
+      default: installExtension,
+      REACT_DEVELOPER_TOOLS,
+    } = require("electron-devtools-installer");
+
+    installExtension(REACT_DEVELOPER_TOOLS).then(name => {
+      console.log(`Added extension: ${name}`);
+    });
+    const template = [{ label: "View", submenu: [{ role: "toggledevtools" }] }];
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+  }
 
   // Open the DevTools.
   // mainWindow.webContents.openDevTools()
