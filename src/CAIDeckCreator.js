@@ -12,7 +12,7 @@ class App extends Component {
       cards: [{ pinyin: "", characters: "", meaning: "" }],
       translationCache: { "": "" },
     };
-    ["onEditDeckName", "onDownload", "onPinyinInputKeyDown"].forEach(
+    ["onEditDeckName", "onDownload", "onHelp", "onPinyinInputKeyDown"].forEach(
       methodName => (this[methodName] = this[methodName].bind(this)),
     );
   }
@@ -27,8 +27,11 @@ class App extends Component {
             value={this.state.deckName}
             onChange={e => this.onEditDeckName(e.target.value)}
           />
-          <button className="DownloadButton" onClick={this.onDownload}>
+          <button className="Button" onClick={this.onDownload}>
             Download
+          </button>
+          <button className="Button" onClick={this.onHelp}>
+            Help
           </button>
         </div>
         <div className="Body">
@@ -90,6 +93,13 @@ class App extends Component {
 
   onEditDeckName(deckName) {
     this.setState({ deckName });
+  }
+
+  onHelp() {
+    // TODO: Make a prettier help page.
+    alert(
+      "Controls:\n\nEnter: New card\nUp/Down Arrows: Select previous/next card\nShift+Delete: Delete card",
+    );
   }
 
   onPinyinInputKeyDown({ key, shiftKey, target }) {
