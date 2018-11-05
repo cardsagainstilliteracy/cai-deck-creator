@@ -38,3 +38,22 @@
   height: 85vh;
   overflow: auto;
 }
+
+th {
+  font-size: 5vh;
+}
+
+td {
+  width: 30vw;
+  font-size: 5vh;
+  background-color: #008;
+  color: white;
+}
+
+td input {
+  font-size: 5vh;
+  background: #008;
+  color: white;
+  border: none;
+  outline: none;
+}
