@@ -11,9 +11,8 @@ class App extends Component {
       deckName: "1.1 Phrases",
       cards: [{ pinyin: "", characters: "", meaning: "" }],
       translationCache: { "": "" },
-      focusedPinyinInput: 1,
     };
-    ["onCreateNewCard", "onEditDeckName", "onDownload"].forEach(
+    ["onEditDeckName", "onDownload", "onPinyinInputKeyDown"].forEach(
       methodName => (this[methodName] = this[methodName].bind(this)),
     );
   }
@@ -48,9 +47,8 @@ class App extends Component {
                     <input
                       type="text"
                       value={card.pinyin}
-                      autoFocus={index === this.state.focusedPinyinInput}
                       onChange={e => this.editCardPinyin(index, e.target.value)}
-                      onKeyDown={this.onCreateNewCard}
+                      onKeyDown={this.onPinyinInputKeyDown}
                     />
                   </td>
                   <td>{card.characters}</td>
@@ -88,23 +86,38 @@ class App extends Component {
     }
   }
 
-  onCreateNewCard({ key }) {
-    if (key === "Enter") {
-      this.setState(prevState => ({
-        cards: prevState.cards.concat({
-          pinyin: "",
-          characters: "",
-          meaning: "",
-        }),
-        focusedPinyinInput: prevState.cards.length,
-      }));
-    }
-  }
-
   onDownload() {}
 
   onEditDeckName(deckName) {
     this.setState({ deckName });
+  }
+
+  onPinyinInputKeyDown({ key, target }) {
+    if (key === "Enter") {
+      this.setState(
+        prevState => ({
+          cards: prevState.cards.concat({
+            pinyin: "",
+            characters: "",
+            meaning: "",
+          }),
+        }),
+        () => {
+          const trs = target.parentNode.parentNode.parentNode.childNodes;
+          trs[trs.length - 1].childNodes[0].childNodes[0].focus();
+        },
+      );
+    } else if (key === "ArrowUp" || key === "Up") {
+      const { previousSibling } = target.parentNode.parentNode;
+      if (previousSibling) {
+        previousSibling.childNodes[0].childNodes[0].focus();
+      }
+    } else if (key === "ArrowDown" || key === "Down") {
+      const { nextSibling } = target.parentNode.parentNode;
+      if (nextSibling) {
+        nextSibling.childNodes[0].childNodes[0].focus();
+      }
+    }
   }
 
   updateCard(editedIndex, changes, check = {}) {
