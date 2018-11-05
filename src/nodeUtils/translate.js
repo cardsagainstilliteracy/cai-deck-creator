@@ -12,11 +12,20 @@ module.exports = async function(chinese) {
   await page.waitFor(
     () =>
       document.querySelector("#result_box") &&
-      document.querySelector("#result_box").innerText.length > 0
+      document.querySelector("#result_box").innerText.length > 0,
   );
-  const translation = await page.evaluate(() => {
+  const meaning = await page.evaluate(() => {
     const resultBox = document.querySelector("#result_box");
     return resultBox.innerText;
   });
-  return translation;
+  await page.waitFor(
+    () =>
+      document.querySelector("#src-translit") &&
+      document.querySelector("#src-translit").innerText.length > 0,
+  );
+  const characters = await page.evaluate(() => {
+    const translitBox = document.querySelector("#src-translit");
+    return translitBox.innerText;
+  });
+  return { meaning, characters };
 };

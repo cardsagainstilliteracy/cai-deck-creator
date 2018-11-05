@@ -10,7 +10,7 @@ class App extends Component {
     this.state = {
       deckName: "1.1 Phrases",
       cards: [{ pinyin: "", characters: "", meaning: "" }],
-      translationCache: { "": "" },
+      translationCache: { "": { meaning: "", characters: "" } },
     };
     ["onEditDeckName", "onDownload", "onHelp", "onPinyinInputKeyDown"].forEach(
       methodName => (this[methodName] = this[methodName].bind(this)),
@@ -72,17 +72,23 @@ class App extends Component {
       ),
     }));
 
-    const meaning = this.state.translationCache[pinyin];
-    if ("string" === typeof meaning) {
+    const translation = this.state.translationCache[pinyin];
+    if (translation && translation.meaning) {
+      const { meaning } = translation;
       this.updateCard(editedIndex, { meaning });
     } else {
-      this.updateCard(editedIndex, { meaning: "..." }, { pinyin });
-      translate(pinyin).then(meaning => {
-        this.updateCard(editedIndex, { meaning }, { pinyin });
+      this.updateCard(
+        editedIndex,
+        { meaning: "...", characters: "..." },
+        { pinyin },
+      );
+      translate(pinyin).then(translation => {
+        console.log(translation);
+        this.updateCard(editedIndex, translation, { pinyin });
         this.setState(prevState => ({
           translationCache: {
             ...prevState.translationCache,
-            [pinyin]: meaning,
+            [pinyin]: translation,
           },
         }));
       });
