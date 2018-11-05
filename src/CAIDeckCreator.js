@@ -117,7 +117,11 @@ class App extends Component {
       if (nextSibling) {
         nextSibling.childNodes[0].childNodes[0].focus();
       }
-    } else if (shiftKey && (key === "Backspace" || key === "Delete")) {
+    } else if (
+      shiftKey &&
+      (key === "Backspace" || key === "Delete") &&
+      this.state.cards.length > 1
+    ) {
       const trs = Array.from(
         target.parentNode.parentNode.parentNode.childNodes,
       );
