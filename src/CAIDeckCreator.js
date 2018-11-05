@@ -92,7 +92,7 @@ class App extends Component {
     this.setState({ deckName });
   }
 
-  onPinyinInputKeyDown({ key, target }) {
+  onPinyinInputKeyDown({ key, shiftKey, target }) {
     if (key === "Enter") {
       this.setState(
         prevState => ({
@@ -117,6 +117,19 @@ class App extends Component {
       if (nextSibling) {
         nextSibling.childNodes[0].childNodes[0].focus();
       }
+    } else if (shiftKey && (key === "Backspace" || key === "Delete")) {
+      const trs = Array.from(
+        target.parentNode.parentNode.parentNode.childNodes,
+      );
+      const deletedIndex = trs.findIndex(
+        tr => tr.childNodes[0].childNodes[0] === target,
+      );
+      if (deletedIndex > 0) {
+        trs[deletedIndex - 1].childNodes[0].childNodes[0].focus();
+      }
+      this.setState(prevState => ({
+        cards: prevState.cards.filter((_, index) => index !== deletedIndex),
+      }));
     }
   }
 
