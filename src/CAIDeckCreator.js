@@ -75,18 +75,9 @@ class App extends Component {
     if ("string" === typeof meaning) {
       this.updateCard(editedIndex, { meaning });
     } else {
+      this.updateCard(editedIndex, { meaning: "..." }, { pinyin });
       translate(pinyin).then(meaning => {
-        this.setState(
-          prevState =>
-            prevState.cards[editedIndex].pinyin !== pinyin
-              ? prevState
-              : {
-                  cards: prevState.cards.map(
-                    (card, index) =>
-                      index === editedIndex ? { ...card, meaning } : card,
-                  ),
-                },
-        );
+        this.updateCard(editedIndex, { meaning }, { pinyin });
         this.setState(prevState => ({
           translationCache: {
             ...prevState.translationCache,
@@ -116,13 +107,20 @@ class App extends Component {
     this.setState({ deckName });
   }
 
-  updateCard(editedIndex, changes) {
-    this.setState(prevState => ({
-      cards: prevState.cards.map(
-        (card, index) =>
-          index === editedIndex ? { ...card, ...changes } : card,
-      ),
-    }));
+  updateCard(editedIndex, changes, check = {}) {
+    this.setState(
+      prevState =>
+        Object.entries(check).every(
+          ([key, value]) => prevState.cards[editedIndex][key] === value,
+        )
+          ? {
+              cards: prevState.cards.map(
+                (card, index) =>
+                  index === editedIndex ? { ...card, ...changes } : card,
+              ),
+            }
+          : prevState,
+    );
   }
 }
 
