@@ -1,0 +1,40 @@
+.Head {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 15vh;
+  background-color: #008;
+}
+
+.DeckNameInput {
+  border: none;
+  border-radius: 1vh;
+  font-size: 5vh;
+  background-color: white;
+  color: #008;
+  margin: 3vh;
+  padding: 1vh;
+  outline: none;
+}
+
+.DownloadButton {
+  border: 1px solid white;
+  border-radius: 1vh;
+  font-size: 5vh;
+  background-color: #008;
+  color: white;
+  margin: 3vh;
+  padding: 1vh;
+  outline: none;
+  float: right;
+}
+
+.Body {
+  position: absolute;
+  top: 15vh;
+  left: 0;
+  width: 100vw;
+  height: 85vh;
+  overflow: auto;
+}

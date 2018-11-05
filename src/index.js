@@ -1,12 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
+import CAIDeckCreator from "./CAIDeckCreator";
 import * as serviceWorker from "./serviceWorker";
+import nodeUtils from "./nodeUtils/index";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+const { translate } = nodeUtils;
 
-// If you want your app to work offline and load faster, you can change
+// translate("dianhua").then(alert);
+
+ReactDOM.render(<CAIDeckCreator />, document.getElementById("root"));
+
+// If you want your CAIDeckCreator to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
