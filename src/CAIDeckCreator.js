@@ -9,8 +9,10 @@ class App extends Component {
     super();
     this.state = {
       deckName: "1.1 Phrases",
-      cards: [{ pinyin: "", characters: "", meaning: "" }],
-      translationCache: { "": { meaning: "", characters: "" } },
+      cards: [{ pinyin: "", characters: "", meaning: "", pinyinWithTones: "" }],
+      translationCache: {
+        "": { meaning: "", characters: "", pinyinWithTones: "" },
+      },
     };
     ["onEditDeckName", "onDownload", "onHelp", "onPinyinInputKeyDown"].forEach(
       methodName => (this[methodName] = this[methodName].bind(this)),
@@ -41,6 +43,7 @@ class App extends Component {
                 <th>Pinyin</th>
                 <th>Characters</th>
                 <th>Meaning</th>
+                <th>Tones</th>
               </tr>
             </thead>
             <tbody>
@@ -56,6 +59,7 @@ class App extends Component {
                   </td>
                   <td>{card.characters}</td>
                   <td>{card.meaning}</td>
+                  <td>{card.pinyinWithTones}</td>
                 </tr>
               ))}
             </tbody>
@@ -79,10 +83,11 @@ class App extends Component {
     } else {
       this.updateCard(
         editedIndex,
-        { meaning: "...", characters: "..." },
+        { meaning: "...", characters: "...", pinyinWithTones: "..." },
         { pinyin },
       );
       translate(pinyin).then(translation => {
+        console.log(translation);
         this.updateCard(editedIndex, translation, { pinyin });
         this.setState(prevState => ({
           translationCache: {

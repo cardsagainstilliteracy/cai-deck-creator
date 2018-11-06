@@ -35,5 +35,18 @@ module.exports = async function(chinese) {
     const translitBox = document.querySelector("#src-translit");
     return translitBox.innerText;
   });
-  return { meaning, characters };
+  page.evaluate(characters => {
+    document.querySelector("textarea").value = characters;
+  }, characters);
+  await page.waitFor(
+    characters =>
+      document.querySelector("#src-translit") &&
+      document.querySelector("#src-translit").innerText !== characters,
+    {},
+    characters,
+  );
+  const pinyinWithTones = await page.evaluate(
+    () => document.querySelector("#src-translit").innerText,
+  );
+  return { meaning, characters, pinyinWithTones };
 };
