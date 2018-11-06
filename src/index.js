@@ -3,11 +3,6 @@ import ReactDOM from "react-dom";
 import "./index.css";
 import CAIDeckCreator from "./CAIDeckCreator";
 import * as serviceWorker from "./serviceWorker";
-import nodeUtils from "./nodeUtils/index";
-
-const { translate } = nodeUtils;
-
-// translate("dianhua").then(alert);
 
 ReactDOM.render(<CAIDeckCreator />, document.getElementById("root"));
 

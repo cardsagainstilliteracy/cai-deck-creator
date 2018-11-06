@@ -77,9 +77,8 @@ class App extends Component {
     }));
 
     const translation = this.state.translationCache[pinyin];
-    if (translation && translation.meaning) {
-      const { meaning } = translation;
-      this.updateCard(editedIndex, { meaning });
+    if (translation !== undefined) {
+      this.updateCard(editedIndex, translation);
     } else {
       this.updateCard(
         editedIndex,
@@ -87,7 +86,6 @@ class App extends Component {
         { pinyin },
       );
       translate(pinyin).then(translation => {
-        console.log(translation);
         this.updateCard(editedIndex, translation, { pinyin });
         this.setState(prevState => ({
           translationCache: {
