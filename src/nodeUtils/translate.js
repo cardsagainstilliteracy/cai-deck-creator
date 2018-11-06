@@ -3,7 +3,9 @@ const browserProm = require("./browserProm");
 module.exports = async function(chinese) {
   const browser = await browserProm;
   const page = await browser.newPage();
-  await page.goto(`https://translate.google.com/#zh-CN/en/${chinese}`);
+  await page.goto(
+    encodeURI(`https://translate.google.com/#zh-CN/en/${chinese}`),
+  );
   await page.waitFor(
     () =>
       document.querySelector("#result_box") &&
@@ -20,7 +22,9 @@ module.exports = async function(chinese) {
   const characters = await page.evaluate(
     () => document.querySelector("#src-translit").innerText,
   );
-  await page.goto(`https://translate.google.com/#zh-CN/en/${characters}`);
+  await page.goto(
+    encodeURI(`https://translate.google.com/#zh-CN/en/${characters}`),
+  );
   await page.waitFor(
     characters =>
       document.querySelector("#src-translit") &&
