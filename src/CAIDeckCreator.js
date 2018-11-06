@@ -83,7 +83,6 @@ class App extends Component {
         { pinyin },
       );
       translate(pinyin).then(translation => {
-        console.log(translation);
         this.updateCard(editedIndex, translation, { pinyin });
         this.setState(prevState => ({
           translationCache: {

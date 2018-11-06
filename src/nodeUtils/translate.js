@@ -4,6 +4,14 @@ module.exports = async function(chinese) {
   const browser = await browserProm;
   const page = await browser.newPage();
   await page.goto("https://translate.google.com");
+  await page.waitFor(() => document.querySelector("#gt-sl-gms"));
+  await page.click("#gt-sl-gms");
+  const id = await page.evaluate(() => {
+    return Array.from(
+      document.querySelectorAll(".goog-menuitem.goog-option"),
+    ).find(m => m.innerText === "Chinese").id;
+  });
+  await page.click('div[id="' + id + '"]');
   await page.waitFor(() => document.querySelector("textarea"));
   page.evaluate(chinese => {
     const textarea = document.querySelector("textarea");
