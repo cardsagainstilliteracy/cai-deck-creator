@@ -4,6 +4,8 @@ import nodeUtils from "./nodeUtils/index";
 
 const { translate } = nodeUtils;
 
+const TRANSLATION_DELAY = 0.75e3;
+
 class App extends Component {
   constructor() {
     super();
@@ -85,15 +87,20 @@ class App extends Component {
         { meaning: "...", characters: "...", pinyinWithTones: "..." },
         { pinyin },
       );
-      translate(pinyin).then(translation => {
-        this.updateCard(editedIndex, translation, { pinyin });
-        this.setState(prevState => ({
-          translationCache: {
-            ...prevState.translationCache,
-            [pinyin]: translation,
-          },
-        }));
-      });
+      setTimeout(() => {
+        if (this.state.cards[editedIndex].pinyin === pinyin) {
+          console.log("translating " + pinyin);
+          translate(pinyin).then(translation => {
+            this.updateCard(editedIndex, translation, { pinyin });
+            this.setState(prevState => ({
+              translationCache: {
+                ...prevState.translationCache,
+                [pinyin]: translation,
+              },
+            }));
+          });
+        }
+      }, TRANSLATION_DELAY);
     }
   }
 
