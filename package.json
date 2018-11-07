@@ -4,6 +4,7 @@
   "private": true,
   "main": "public/electron.js",
   "dependencies": {
+    "json5": "^2.1.0",
     "puppeteer": "^1.10.0",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",

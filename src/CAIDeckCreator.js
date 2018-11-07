@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import json5 from "json5";
 import "./CAIDeckCreator.css";
 import nodeUtils from "./nodeUtils/index";
 
@@ -16,7 +17,7 @@ class App extends Component {
         "": { meaning: "", characters: "", pinyinWithTones: "" },
       },
     };
-    ["onEditDeckName", "onDownload", "onHelp", "onPinyinInputKeyDown"].forEach(
+    ["onEditDeckName", "onCopy", "onHelp", "onPinyinInputKeyDown"].forEach(
       methodName => (this[methodName] = this[methodName].bind(this)),
     );
   }
@@ -31,8 +32,8 @@ class App extends Component {
             value={this.state.deckName}
             onChange={e => this.onEditDeckName(e.target.value)}
           />
-          <button className="Button" onClick={this.onDownload}>
-            Download
+          <button className="Button" onClick={this.onCopy}>
+            Copy
           </button>
           <button className="Button" onClick={this.onHelp}>
             Help
@@ -104,7 +105,38 @@ class App extends Component {
     }
   }
 
-  onDownload() {}
+  generateJS() {
+    const cardsWithRenamedProperties = this.state.cards.map(
+      ({ characters, meaning, pinyinWithTones: pinyin }) => ({
+        characters,
+        meaning,
+        pinyin,
+      }),
+    );
+    return (
+      "export default " +
+      json5.stringify(
+        {
+          name: this.state.deckName,
+          cards: cardsWithRenamedProperties,
+        },
+        null,
+        2,
+      ) +
+      ";"
+    );
+  }
+
+  onCopy() {
+    const textArea = document.createElement("textarea");
+    textArea.value = this.generateJS();
+    textArea.style.position = "fixed";
+    textArea.style.left = "-100vw";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    document.execCommand("copy");
+  }
 
   onEditDeckName(deckName) {
     this.setState({ deckName });
