@@ -90,15 +90,22 @@ class App extends Component {
       );
       setTimeout(() => {
         if (this.state.cards[editedIndex].pinyin === pinyin) {
-          translate(pinyin).then(translation => {
-            this.updateCard(editedIndex, translation, { pinyin });
-            this.setState(prevState => ({
-              translationCache: {
-                ...prevState.translationCache,
-                [pinyin]: translation,
-              },
-            }));
-          });
+          translate(pinyin)
+            .then(translation => {
+              this.updateCard(editedIndex, translation, { pinyin });
+              this.setState(prevState => ({
+                translationCache: {
+                  ...prevState.translationCache,
+                  [pinyin]: translation,
+                },
+              }));
+            })
+            .catch(error =>
+              console.error(
+                "There was an error translating " + pinyin + ":",
+                error,
+              ),
+            );
         }
       }, TRANSLATION_DELAY);
     }
