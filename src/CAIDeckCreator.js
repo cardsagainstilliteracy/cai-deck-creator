@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import json5 from "json5";
 import "./CAIDeckCreator.css";
 import nodeUtils from "./nodeUtils/index";
+import removeTones from "./removeTones";
 
 const { translate } = nodeUtils;
 
@@ -16,10 +17,20 @@ class App extends Component {
       translationCache: {
         "": { meaning: "", characters: "", pinyinWithTones: "" },
       },
+      isPromptOpen: false,
+      deckSource: "",
     };
-    ["onEditDeckName", "onCopy", "onHelp", "onPinyinInputKeyDown"].forEach(
-      methodName => (this[methodName] = this[methodName].bind(this)),
-    );
+    [
+      "onCancelPaste",
+      "onCopy",
+      "onEditDeckName",
+      "onEditDeckSource",
+      "onHelp",
+      "onMergePaste",
+      "onOpenPrompt",
+      "onPinyinInputKeyDown",
+      "onReplacePaste",
+    ].forEach(methodName => (this[methodName] = this[methodName].bind(this)));
   }
 
   render() {
@@ -32,6 +43,9 @@ class App extends Component {
             value={this.state.deckName}
             onChange={e => this.onEditDeckName(e.target.value)}
           />
+          <button className="Button" onClick={this.onOpenPrompt}>
+            Paste
+          </button>
           <button className="Button" onClick={this.onCopy}>
             Copy
           </button>
@@ -68,6 +82,26 @@ class App extends Component {
             </tbody>
           </table>
         </div>
+        {this.state.isPromptOpen && (
+          <div className="Prompt">
+            <div className="PromptHeader">Paste your code here:</div>
+            <textarea
+              value={this.state.deckSource}
+              onChange={e => this.onEditDeckSource(e.target.value)}
+            />
+            <section className="PromptButtonBar">
+              <button className="PromptButton" onClick={this.onCancelPaste}>
+                Cancel
+              </button>
+              <button className="PromptButton" onClick={this.onMergePaste}>
+                Merge
+              </button>
+              <button className="PromptButton" onClick={this.onReplacePaste}>
+                Replace
+              </button>
+            </section>
+          </div>
+        )}
       </>
     );
   }
@@ -133,6 +167,12 @@ class App extends Component {
     );
   }
 
+  onCancelPaste() {
+    this.setState({
+      isPromptOpen: false,
+    });
+  }
+
   onCopy() {
     const textArea = document.createElement("textarea");
     textArea.value = this.generateJS();
@@ -148,11 +188,47 @@ class App extends Component {
     this.setState({ deckName });
   }
 
+  onEditDeckSource(deckSource) {
+    this.setState({ deckSource });
+  }
+
   onHelp() {
     // TODO: Make a prettier help page.
     alert(
       "Controls:\n\nEnter: New card\nUp/Down Arrows: Select previous/next card\nShift+Delete: Delete card",
     );
+  }
+
+  onMergePaste() {
+    try {
+      const sanitizedSrc = this.state.deckSource
+        .trim()
+        .replace(/^(export default)|(module.exports =)/, "")
+        .replace(/;$/, "")
+        .trim();
+      if (sanitizedSrc === "") {
+        return;
+      }
+      const { cards } = json5.parse(sanitizedSrc);
+      const cardsWithRenamedProperties = cards.map(
+        ({ characters, meaning, pinyin }) => ({
+          pinyin: removeTones(pinyin),
+          characters,
+          meaning,
+          pinyinWithTones: pinyin,
+        }),
+      );
+      this.setState(prevState => ({
+        cards: prevState.cards.concat(cardsWithRenamedProperties),
+        isPromptOpen: false,
+      }));
+    } catch (error) {
+      alert(error);
+    }
+  }
+
+  onOpenPrompt() {
+    this.setState({ isPromptOpen: true });
   }
 
   onPinyinInputKeyDown({ key, shiftKey, target }) {
@@ -197,6 +273,34 @@ class App extends Component {
       this.setState(prevState => ({
         cards: prevState.cards.filter((_, index) => index !== deletedIndex),
       }));
+    }
+  }
+
+  onReplacePaste() {
+    try {
+      const sanitizedSrc = this.state.deckSource
+        .trim()
+        .replace(/^(export default)|(module.exports =)/, "")
+        .replace(/;$/, "")
+        .trim();
+      if (sanitizedSrc === "") {
+        return;
+      }
+      const { cards } = json5.parse(sanitizedSrc);
+      const cardsWithRenamedProperties = cards.map(
+        ({ characters, meaning, pinyin }) => ({
+          pinyin: removeTones(pinyin),
+          characters,
+          meaning,
+          pinyinWithTones: pinyin,
+        }),
+      );
+      this.setState({
+        cards: cardsWithRenamedProperties,
+        isPromptOpen: false,
+      });
+    } catch (error) {
+      alert(error);
     }
   }
 
