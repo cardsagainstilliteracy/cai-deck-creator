@@ -90,7 +90,6 @@ class App extends Component {
       );
       setTimeout(() => {
         if (this.state.cards[editedIndex].pinyin === pinyin) {
-          console.log("translating " + pinyin);
           translate(pinyin).then(translation => {
             this.updateCard(editedIndex, translation, { pinyin });
             this.setState(prevState => ({
