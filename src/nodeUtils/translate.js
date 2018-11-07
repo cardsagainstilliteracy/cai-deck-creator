@@ -32,8 +32,8 @@ module.exports = async function(chinese) {
     {},
     characters,
   );
-  const pinyinWithTones = await page.evaluate(
-    () => document.querySelector("#src-translit").innerText,
+  const pinyinWithTones = await page.evaluate(() =>
+    document.querySelector("#src-translit").innerText.toLowerCase(),
   );
   return { meaning, characters, pinyinWithTones };
 };
