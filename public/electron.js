@@ -26,7 +26,26 @@ function createWindow() {
     installExtension(REACT_DEVELOPER_TOOLS).then(name => {
       console.log(`Added extension: ${name}`);
     });
-    const template = [{ label: "View", submenu: [{ role: "toggledevtools" }] }];
+    const template = [
+      {
+        label: "File",
+        submenu: [{ role: "about" }, { role: "quit" }],
+      },
+      {
+        label: "Edit",
+        submenu: [
+          { role: "undo" },
+          { role: "redo" },
+          { type: "separator" },
+          { role: "cut" },
+          { role: "copy" },
+          { role: "paste" },
+          { role: "pasteandmatchstyle" },
+          { role: "selectall" },
+        ],
+      },
+      { label: "View", submenu: [{ role: "toggledevtools" }] },
+    ];
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
   }
 
