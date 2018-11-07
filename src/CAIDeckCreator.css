@@ -28,6 +28,7 @@
   padding: 1vh;
   outline: none;
   float: right;
+  cursor: pointer;
 }
 
 .Body {
@@ -101,4 +102,5 @@ td input {
   margin: 3vh;
   padding: 1vh;
   outline: none;
+  cursor: pointer;
 }
