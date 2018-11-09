@@ -11,8 +11,8 @@ module.exports = async function(chinese) {
       document.querySelector("#result_box") &&
       document.querySelector("#result_box").innerText.length > 0,
   );
-  const meaning = await page.evaluate(
-    () => document.querySelector("#result_box").innerText,
+  const meaning = await page.evaluate(() =>
+    document.querySelector("#result_box").innerText.toLowerCase(),
   );
   await page.waitFor(
     () =>
