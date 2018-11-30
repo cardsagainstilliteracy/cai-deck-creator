@@ -12,11 +12,18 @@ module.exports = async function(pinyin) {
       );
       await page.waitFor(
         () =>
-          document.querySelector("#src-translit") &&
-          document.querySelector("#src-translit").innerText !== "",
+          document.querySelector(
+            ".tlid-transliteration-content.transliteration-content.full",
+          ) &&
+          document.querySelector(
+            ".tlid-transliteration-content.transliteration-content.full",
+          ).innerText !== "",
       );
       const characterArray = (await page.evaluate(
-        () => document.querySelector("#src-translit").innerText,
+        () =>
+          document.querySelector(
+            ".tlid-transliteration-content.transliteration-content.full",
+          ).innerText,
       )).split("");
       return s.indexes === null
         ? characterArray.join("")
@@ -29,15 +36,23 @@ module.exports = async function(pinyin) {
   );
   await page.waitFor(
     () =>
-      document.querySelector("#result_box") &&
-      document.querySelector("#result_box").innerText !== "" &&
-      document.querySelector("#src-translit") &&
-      document.querySelector("#src-translit").innerText !== "",
+      document.querySelector(".text-wrap.tlid-copy-target") &&
+      document.querySelector(".text-wrap.tlid-copy-target").innerText !== "" &&
+      document.querySelector(
+        ".tlid-transliteration-content.transliteration-content.full",
+      ) &&
+      document.querySelector(
+        ".tlid-transliteration-content.transliteration-content.full",
+      ).innerText !== "",
   );
   const { meaning, pinyinWithTones } = await page.evaluate(() => ({
-    meaning: document.querySelector("#result_box").innerText.toLowerCase(),
+    meaning: document
+      .querySelector(".text-wrap.tlid-copy-target")
+      .innerText.toLowerCase(),
     pinyinWithTones: document
-      .querySelector("#src-translit")
+      .querySelector(
+        ".tlid-transliteration-content.transliteration-content.full",
+      )
       .innerText.toLowerCase(),
   }));
   return {
