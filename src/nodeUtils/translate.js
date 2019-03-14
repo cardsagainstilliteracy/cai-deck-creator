@@ -8,7 +8,9 @@ module.exports = async function(pinyin) {
     segments.map(async s => {
       const page = await browser.newPage();
       await page.goto(
-        encodeURI(`https://translate.google.com/#zh-CN/en/${s.pinyin}`),
+        `https://translate.google.com/#view=home&op=translate&sl=zh-CN&tl=en&text=${encodeURIComponent(
+          s.pinyin,
+        )}`,
       );
       await page.waitFor(
         () =>
@@ -32,7 +34,9 @@ module.exports = async function(pinyin) {
   )).join("");
   const page = await browser.newPage();
   await page.goto(
-    encodeURI(`https://translate.google.com/#zh-CN/en/${characters}`),
+    `https://translate.google.com/#view=home&op=translate&sl=zh-CN&tl=en&text=${encodeURIComponent(
+      characters,
+    )}`,
   );
   await page.waitFor(
     () =>
